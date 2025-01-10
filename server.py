@@ -1,10 +1,11 @@
 # server.py
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+app.secret_key = 'your_secret_key'  # Required for session management
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Initialize SQLite database
 conn = sqlite3.connect('users.db', check_same_thread=False)
@@ -30,6 +31,9 @@ def login():
 
     if user:
         uid, username, password, displayname = user
+        session['user_id'] = uid  # Store user ID in session
+        session['username'] = username
+        session['displayname'] = displayname
         return jsonify({
             "success": True,
             "user": {
@@ -39,6 +43,24 @@ def login():
         })
     else:
         return jsonify({"success": False, "message": "Invalid username or password"})
+
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    if 'user_id' in session:
+        return jsonify({
+            "success": True,
+            "user": {
+                "id": session['user_id'],
+                "name": session['displayname']
+            }
+        })
+    else:
+        return jsonify({"success": False, "message": "No active session"})
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({"success": True, "message": "Logged out successfully"})
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

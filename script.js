@@ -13,7 +13,8 @@ async function login() {
         const response = await fetch('http://localhost:5000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'  // Include session cookies
         });
 
         if (!response.ok) {
@@ -38,6 +39,7 @@ async function login() {
         message.textContent = 'An error occurred. Please try again later';
     }
 }
+
 async function loadUserPage(user) {
     try {
         const response = await fetch('user_page.html');  // Load external HTML file
@@ -55,3 +57,35 @@ async function loadUserPage(user) {
         console.error('Error loading user page:', error);
     }
 }
+
+async function checkSession() {
+    try {
+        const response = await fetch('http://localhost:5000/check_session', {
+            method: 'GET',
+            credentials: 'include'  // Include session cookies
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        if (result.success) {
+            await loadUserPage(result.user);  // Load user page if session exists
+        }
+    } catch (error) {
+        console.error('Error checking session:', error);
+    }
+}
+
+async function logout() {
+    await fetch('http://localhost:5000/logout', {
+        method: 'POST',
+        credentials: 'include'
+    });
+    localStorage.removeItem('user');
+    location.reload();
+}
+
+// Check session on page load
+window.onload = checkSession;

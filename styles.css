@@ -1,3 +1,33 @@
+@font-face {
+    font-family: 'snoorks';
+    src: url(./fonts/snoorks-font/Snoorks-L3EgW.ttf);
+}
+
+@font-face {
+    font-family: 'cement';
+    src: url(./fonts/cement-ext-bd-font/CementpersonaluseExtrabold-K7g3X.otf);
+}
+
+@font-face {
+    font-family: 'cushy';
+    src: url(./fonts/cushy-font/Cushy-ALa3D.otf);
+}
+
+@font-face {
+    font-family: 'makeup';
+    src: url(./fonts/makeup-font/MakeupPersonalUseRegular-8Vpz.ttf);
+}
+
+@font-face {
+    font-family: 'regista';
+    src: url(./fonts/regista-font/Demoregista-PV7ed.otf);
+}
+
+@font-face {
+    font-family: 'quincy';
+    src: url(./fonts/the-quincy-font/TheQuincy-8MKmJ.ttf);
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -37,7 +67,18 @@ body {
 .container button:hover {
     background-color: #4cae4c;
 }
+.container .logout {
+    background-color: #b85c5c;
+}
+.container .logout:hover{
+    background-color: #ae4c4c;
+}
 .message {
     color: red;
     text-align: center;
+}
+#user-name {
+    color: rgb(39, 175, 112);
+    font-family: 'quincy';
+    font-size: 35px;
 }
