@@ -22,6 +22,7 @@ async function login() {
 
         const result = await response.json();
         if (result.success) {
+            await loadUserPage(result.user);
             message.style.color = 'green';
             message.textContent = 'Login successful!';
             console.log(result.success);
@@ -35,5 +36,22 @@ async function login() {
     } catch (error) {
         message.style.color = 'red';
         message.textContent = 'An error occurred. Please try again later';
+    }
+}
+async function loadUserPage(user) {
+    try {
+        const response = await fetch('user_page.html');  // Load external HTML file
+        if (!response.ok) {
+            throw new Error('Failed to load user page');
+        }
+
+        const pageContent = await response.text();
+        document.body.innerHTML = pageContent;  // Inject the content into body
+
+        // Insert user-specific data into placeholders
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-id').textContent = user.id;
+    } catch (error) {
+        console.error('Error loading user page:', error);
     }
 }

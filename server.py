@@ -9,11 +9,11 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # Initialize SQLite database
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS users (uid INTEGER PRIMARY KEY, username TEXT UNIQUE, password TEXT)''')
+c.execute('''CREATE TABLE IF NOT EXISTS users (uid INTEGER UNIQUE, username TEXT UNIQUE, password TEXT, displayname TEXT)''')
 conn.commit()
 
 # Sample user for testing
-c.execute("INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)", ('testuser', 'password123'))
+c.execute("INSERT OR IGNORE INTO users (uid, username, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir', 'zarir100', 'Ahmad Zarir'))
 conn.commit()
 
 @app.route('/login', methods=['POST'])
@@ -29,7 +29,14 @@ def login():
     user = c.fetchone()
 
     if user:
-        return jsonify({"success": True})
+        uid, username, password, displayname = user
+        return jsonify({
+            "success": True,
+            "user": {
+                "id": uid,
+                "name": displayname
+            }
+        })
     else:
         return jsonify({"success": False, "message": "Invalid username or password"})
 
