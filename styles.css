@@ -1,4 +1,9 @@
 @font-face {
+    font-family: 'roboto';
+    src: url(./fonts/Roboto/Roboto-VariableFont_wdth\,wght.ttf);
+}
+
+@font-face {
     font-family: 'snoorks';
     src: url(./fonts/snoorks-font/Snoorks-L3EgW.ttf);
 }
@@ -29,7 +34,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'robot' ,sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,6 +69,16 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+label {
+    margin-left: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 17px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    white-space: nowrap; /* Prevents line break */
+}
 .container button:hover {
     background-color: #4cae4c;
 }
@@ -81,4 +96,19 @@ body {
     color: rgb(39, 175, 112);
     font-family: 'quincy';
     font-size: 35px;
+}
+
+.topNav{
+    position: fixed;
+    width: 100%;
+    height: 100px;
+    top: 0;
+    background-color: #181a18;
+}
+
+.logo{
+    position: fixed;
+    top: 10px;
+    left:  10px;
+    width: 5%;
 }

@@ -1,3 +1,27 @@
+const PORT = "5000"
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the checkbox element and set its checked property to false
+    document.getElementById('show-password').checked = false;
+});
+
+document.getElementById('show-password').addEventListener('change', function () {
+    const passwordField = document.getElementById('password');
+    passwordField.type = this.checked ? 'text' : 'password';
+});
+
+document.getElementById('username').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        document.getElementById('password').focus(); // Move focus to password field
+    }
+});
+
+document.getElementById('password').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        login(); // Trigger login function
+    }
+});
+
 async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
@@ -10,7 +34,7 @@ async function login() {
     }
     
     try {
-        const response = await fetch('http://localhost:5000/login', {
+        const response = await fetch(`http://localhost:${PORT}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -60,7 +84,7 @@ async function loadUserPage(user) {
 
 async function checkSession() {
     try {
-        const response = await fetch('http://localhost:5000/check_session', {
+        const response = await fetch(`http://localhost:${PORT}/check_session`, {
             method: 'GET',
             credentials: 'include'  // Include session cookies
         });
@@ -79,7 +103,7 @@ async function checkSession() {
 }
 
 async function logout() {
-    await fetch('http://localhost:5000/logout', {
+    await fetch(`http://localhost:${PORT}/logout`, {
         method: 'POST',
         credentials: 'include'
     });
