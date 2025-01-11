@@ -1,11 +1,33 @@
 <link rel="stylesheet" href="./styles.css">
-<!-- <div class="container">
-    <h2>Welcome, <span id="user-name"></span>!</h2>
-    <p><strong>ID:</strong> <span id="user-id"></span></p>
-    <p>This is your personal stats page.</p>
-    <button onclick="logout()" class="logout">Logout</button>
-</div> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>body{background-color: #484848;}</style>
 
 <div class="topNav">
-    <image src="./logo.png" class="logo">
+    <!-- Logo on the left -->
+    <img src="./logo.png" class="logo" alt="Logo">
+    
+    <!-- Navigation items on the right -->
+    <div class="navItems">
+        <div class="topNavItem active">
+            <a href="">Dashboard</a>
+        </div>
+        <div class="topNavItem">
+            <a href="">Info</a>
+        </div>
+        <div class="topNavItem">
+            <a href="">News</a>
+        </div>
+        <div class="topNavItem">
+            <a href="">Voting</a>
+        </div>
+        <!-- Logout button -->
+        <div class="topNavItem logout">
+            <a href="#" onclick="logout()">
+                <i class="fa fa-sign-out"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="mainContent">
+    <h1>Hello <span id="user-name">[Your Name]</span>!</h1>
 </div>

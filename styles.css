@@ -1,4 +1,9 @@
 @font-face {
+    font-family: 'rounds';
+    src: url('./fonts/rounds-black/Rounds\ Black.otf');
+}
+
+@font-face {
     font-family: 'roboto';
     src: url(./fonts/Roboto/Roboto-VariableFont_wdth\,wght.ttf);
 }
@@ -40,7 +45,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f4f4f4;
+    /* background-color: #484848; */
 }
 .container {
     width: 300px;
@@ -82,33 +87,80 @@ label {
 .container button:hover {
     background-color: #4cae4c;
 }
-.container .logout {
-    background-color: #b85c5c;
-}
-.container .logout:hover{
-    background-color: #ae4c4c;
-}
 .message {
     color: red;
     text-align: center;
 }
-#user-name {
-    color: rgb(39, 175, 112);
-    font-family: 'quincy';
-    font-size: 35px;
-}
 
-.topNav{
+.topNav {
     position: fixed;
     width: 100%;
     height: 100px;
     top: 0;
     background-color: #181a18;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes items to the sides */
+    padding: 0 20px; /* Adds padding on left and right */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow for a nice effect */
+    z-index: 1000; /* Ensures it stays on top */
 }
 
-.logo{
-    position: fixed;
-    top: 10px;
-    left:  10px;
-    width: 5%;
+.logo {
+    width: 80px;
+    height: auto;
+    margin: 10px;
+}
+
+.navItems {
+    display: flex; /* Makes the nav items align horizontally */
+    gap: 20px; /* Adds space between items */
+    margin: 20px;
+}
+
+.topNavItem a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-family: 'rounds';
+}
+
+/* Soft orange background highlight with bright yellow glow */
+.topNavItem a:hover, .topNavItem.active a {
+    background-color: rgb(255, 196, 0); /* Soft orange highlight */
+    box-shadow: 0 0 20px rgba(255, 223, 0, 0.8); /* Bright yellow glow */
+    color: #000000; /* Optional: Warm off-white text color */
+}
+
+/* Logout button style */
+.logout a {
+    color: #ff4c4c;
+    font-weight: bold;
+}
+
+.logout a:hover {
+    color: whitesmoke;
+    background-color: rgba(255, 76, 76, 0.2);
+    box-shadow: 0 0 20px rgba(255, 76, 76, 0.7); /* Red glow for logout */
+}
+
+.mainContent {
+    margin-top: 100px; /* This ensures the content starts right below the navbar */
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+
+.mainContent h1 {
+    font-size: 4em; /* Large font size */
+    font-weight: bold;
+}
+
+#user-name{
+    font-family: quincy;
+    color: #ffb74d; /* Warm orange color for the text */
+    text-shadow: 2px 2px 10px rgba(255, 140, 0, 0.6);
 }
