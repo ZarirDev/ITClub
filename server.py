@@ -1,4 +1,5 @@
 # server.py
+import time
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import sqlite3
@@ -6,6 +7,7 @@ import sqlite3
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Required for session management
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+DELAYSIM = 0.5
 
 # Initialize SQLite database
 conn = sqlite3.connect('users.db', check_same_thread=False)
@@ -19,6 +21,7 @@ conn.commit()
 
 @app.route('/login', methods=['POST'])
 def login():
+    time.sleep(DELAYSIM)
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
@@ -46,6 +49,7 @@ def login():
 
 @app.route('/check_session', methods=['GET'])
 def check_session():
+    time.sleep(DELAYSIM)
     if 'user_id' in session:
         return jsonify({
             "success": True,
@@ -59,8 +63,9 @@ def check_session():
 
 @app.route('/logout', methods=['POST'])
 def logout():
+    time.sleep(DELAYSIM)
     session.clear()
     return jsonify({"success": True, "message": "Logged out successfully"})
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(port=6310, debug=True)

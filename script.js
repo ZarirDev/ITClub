@@ -1,115 +1,171 @@
-const PORT = "5000"
+const PORT = "6310";
+const IP = "localhost";
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Get the checkbox element and set its checked property to false
-    document.getElementById('show-password').checked = false;
+document.addEventListener("DOMContentLoaded", () => {
+    initializePage();
 });
 
-document.getElementById('show-password').addEventListener('change', function () {
-    const passwordField = document.getElementById('password');
-    passwordField.type = this.checked ? 'text' : 'password';
-});
+// Initialize the page elements and event listeners
+function initializePage() {
+    const showPasswordCheckbox = document.getElementById("show-password");
+    const usernameField = document.getElementById("username");
+    const passwordField = document.getElementById("password");
 
-document.getElementById('username').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        document.getElementById('password').focus(); // Move focus to password field
-    }
-});
+    // Ensure the password checkbox is unchecked by default
+    showPasswordCheckbox.checked = false;
 
-document.getElementById('password').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        login(); // Trigger login function
-    }
-});
+    // Toggle password visibility
+    showPasswordCheckbox.addEventListener("change", () => {
+        passwordField.type = showPasswordCheckbox.checked ? "text" : "password";
+    });
 
-async function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const message = document.getElementById('message');
-
-    if (!username || !password) {
-        message.style.color = 'red';
-        message.textContent = 'Please fill in all fields';
-        return;
-    }
-    
-    try {
-        const response = await fetch(`http://localhost:${PORT}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include'  // Include session cookies
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+    // Handle Enter key in the username field
+    usernameField.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            passwordField.focus();
         }
+    });
 
-        const result = await response.json();
-        if (result.success) {
-            await loadUserPage(result.user);
-            message.style.color = 'green';
-            message.textContent = 'Login successful!';
-            console.log(result.success);
-            console.log("Successfully logged in");
-        } else {
-            message.style.color = 'red';
-            message.textContent = 'Invalid username or password';
-            console.log(result.success);
-            console.log("Invalid credentials");
+    // Handle Enter key in the password field
+    passwordField.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            login();
         }
-    } catch (error) {
-        message.style.color = 'red';
-        message.textContent = 'An error occurred. Please try again later';
+    });
+
+    // Check for an active session when the page loads
+    checkSession();
+}
+
+// Display the loading screen
+function showLoading() {
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) {
+        loadingScreen.style.display = "flex";
     }
 }
 
-async function loadUserPage(user) {
+// Hide the loading screen
+function hideLoading() {
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) {
+        loadingScreen.style.display = "none";
+    }
+}
+
+// Handle user login
+async function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if (!username || !password) {
+        displayMessage("Please fill in all fields", "red");
+        return;
+    }
+
+    showLoading();
+
     try {
-        const response = await fetch('user_page.html');  // Load external HTML file
+        const response = await fetch(`http://${IP}:${PORT}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+            credentials: "include",
+        });
+
         if (!response.ok) {
-            throw new Error('Failed to load user page');
+            throw new Error("Failed to authenticate");
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            await loadUserPage(result.user);
+            displayMessage("Login successful!", "green");
+        } else {
+            displayMessage("Invalid username or password", "red");
+        }
+    } catch (error) {
+        displayMessage("An error occurred. Please try again later", "red");
+    } finally {
+        hideLoading();
+    }
+}
+
+// Load the user-specific page
+async function loadUserPage(user) {
+    showLoading();
+
+    try {
+        const response = await fetch("user_page.html");
+
+        if (!response.ok) {
+            throw new Error("Failed to load user page");
         }
 
         const pageContent = await response.text();
-        document.body.innerHTML = pageContent;  // Inject the content into body
+        document.body.innerHTML = pageContent;
 
-        // Insert user-specific data into placeholders
-        document.getElementById('user-name').textContent = user.name;
-        document.getElementById('user-id').textContent = user.id;
+        // Populate user data into placeholders
+        document.getElementById("user-name").textContent = user.name;
+        document.getElementById("user-id").textContent = user.id;
     } catch (error) {
-        console.error('Error loading user page:', error);
+        console.error("Error loading user page:", error);
+    } finally {
+        hideLoading();
     }
 }
 
+// Check if the user has an active session
 async function checkSession() {
+    showLoading();
+
     try {
-        const response = await fetch(`http://localhost:${PORT}/check_session`, {
-            method: 'GET',
-            credentials: 'include'  // Include session cookies
+        const response = await fetch(`http://${IP}:${PORT}/check_session`, {
+            method: "GET",
+            credentials: "include",
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Failed to check session");
         }
 
         const result = await response.json();
+
         if (result.success) {
-            await loadUserPage(result.user);  // Load user page if session exists
+            await loadUserPage(result.user);
         }
     } catch (error) {
-        console.error('Error checking session:', error);
+        console.error("Error checking session:", error);
+    } finally {
+        hideLoading();
     }
 }
 
+// Log out the user and clear session data
 async function logout() {
-    await fetch(`http://localhost:${PORT}/logout`, {
-        method: 'POST',
-        credentials: 'include'
-    });
-    localStorage.removeItem('user');
-    location.reload();
+    showLoading();
+
+    try {
+        await fetch(`http://${IP}:${PORT}/logout`, {
+            method: "POST",
+            credentials: "include",
+        });
+        localStorage.removeItem("user");
+        location.reload();
+    } catch (error) {
+        console.error("Error logging out:", error);
+    } finally {
+        hideLoading();
+    }
 }
 
-// Check session on page load
-window.onload = checkSession;
+// Display a message to the user
+function displayMessage(text, color) {
+    const message = document.getElementById("message");
+    if (message) {
+        message.style.color = color;
+        message.textContent = text;
+    }
+}
