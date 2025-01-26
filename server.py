@@ -12,12 +12,12 @@ DELAYSIM = 0.5
 # Initialize SQLite database
 conn = sqlite3.connect('users.db', check_same_thread=False)
 c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS users (uid INTEGER UNIQUE, username TEXT UNIQUE, password TEXT, displayname TEXT)''')
+c.execute('''CREATE TABLE IF NOT EXISTS users (snid INTEGER PRIMARY KEY, uid INTEGER UNIQUE, email TEXT UNIQUE, password TEXT, displayname TEXT)''')
 conn.commit()
 
 # Sample user for testing
-c.execute("INSERT OR IGNORE INTO users (uid, email, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir498@gmail.com', 'zarir100', 'Ahmad Zarir'))
-conn.commit()
+# c.execute("INSERT OR IGNORE INTO users (uid, email, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir498@gmail.com', 'zarir100', 'Ahmad Zarir'))
+# conn.commit()
 
 @app.route('/login', methods=['POST'])
 def login():

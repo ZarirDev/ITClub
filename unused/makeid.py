@@ -1,36 +1,48 @@
+import pandas as pd
 import sqlite3
 from datetime import date
 
-fromDB= sqlite3.connect('students.db')
-fromCur=fromDB.cursor()
-toDB= sqlite3.connect('users.db')
-toCur=toDB.cursor()
+db = sqlite3.connect('users.db')
+cur = db.cursor()
 
-fromCur.execute("SELECT * FROM students")
-rows = fromCur.fetchall()
+cur.execute("SELECT COUNT(*) FROM users")
+row_count = cur.fetchone()[0]
+
+filepath = "./dataset1.csv"
+df = pd.read_csv(filepath)
+
+rows = []
+for i in range(len(df)):
+    rows.append(df.loc[i].tolist())
 
 uids = []
 
-#251xx00xx
-
 for row in rows:
-    uid = str(date.today().year)[-2:]
-    # print(row[4])
-    if row[4] == "B":
-        uid+="0"
-    elif row[4] == "E":
-        uid+="1"
+    section = row[4]
+    grade = row[3]
+    regID = str(row_count + 1).zfill(4)
+    email = row[1]
+    password = row[6]
+    name = row[2]
 
-    if row[3] > 9:
-        uid+=str(row[3])
-    else:
-        uid+=f"0{str(row[3])}"
+    uid = "ITC" + str(date.today().year)[-2:]
+    if section == "B":
+        uid += "1"
+    elif section == "E":
+        uid += "2"
 
-    uid+=row[5][-4:]
+    if grade > 5:
+        uid += "1"
+    elif grade < 6:
+        uid += "2"
 
-    uids.append(uid)
+    uid += regID
 
-i=0
-for row in rows:
-    print(f"{uids[i]} | {row[2]}")
-    i+=1
+    print(f"{uid} | {name}")
+    cur.execute("INSERT OR IGNORE INTO users (uid, email, password, displayname) VALUES (?, ?, ?, ?)", 
+                (uid, email, password, name))
+    db.commit()
+
+    row_count += 1
+
+db.close()
