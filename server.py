@@ -16,7 +16,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS users (uid INTEGER UNIQUE, username TEXT
 conn.commit()
 
 # Sample user for testing
-c.execute("INSERT OR IGNORE INTO users (uid, username, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir', 'zarir100', 'Ahmad Zarir'))
+c.execute("INSERT OR IGNORE INTO users (uid, email, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir498@gmail.com', 'zarir100', 'Ahmad Zarir'))
 conn.commit()
 
 @app.route('/login', methods=['POST'])
