@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Initialize the page elements and event listeners
 function initializePage() {
     const showPasswordCheckbox = document.getElementById("show-password");
-    const usernameField = document.getElementById("username");
+    const emailField = document.getElementById("email");  // Changed from "username" to "email"
     const passwordField = document.getElementById("password");
 
     // Ensure the password checkbox is unchecked by default
@@ -19,8 +19,8 @@ function initializePage() {
         passwordField.type = showPasswordCheckbox.checked ? "text" : "password";
     });
 
-    // Handle Enter key in the username field
-    usernameField.addEventListener("keypress", (e) => {
+    // Handle Enter key in the email field
+    emailField.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
             passwordField.focus();
         }
@@ -55,11 +55,11 @@ function hideLoading() {
 
 // Handle user login
 async function login() {
-    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;  // Changed from "username" to "email"
     const password = document.getElementById("password").value;
     const message = document.getElementById("message");
 
-    if (!username || !password) {
+    if (!email || !password) {
         displayMessage("Please fill in all fields", "red");
         return;
     }
@@ -70,7 +70,7 @@ async function login() {
         const response = await fetch(`http://${IP}:${PORT}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ email, password }),  // Send email instead of username
             credentials: "include",
         });
 
@@ -84,7 +84,7 @@ async function login() {
             await loadUserPage(result.user);
             displayMessage("Login successful!", "green");
         } else {
-            displayMessage("Invalid username or password", "red");
+            displayMessage("Invalid email or password", "red");
         }
     } catch (error) {
         displayMessage("An error occurred. Please try again later", "red");

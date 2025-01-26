@@ -1,4 +1,3 @@
-# server.py
 import time
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
@@ -15,7 +14,7 @@ c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS users (snid INTEGER PRIMARY KEY, uid INTEGER UNIQUE, email TEXT UNIQUE, password TEXT, displayname TEXT)''')
 conn.commit()
 
-# Sample user for testing
+# Sample user for testing (this is a comment now as you're shifting to email)
 # c.execute("INSERT OR IGNORE INTO users (uid, email, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir498@gmail.com', 'zarir100', 'Ahmad Zarir'))
 # conn.commit()
 
@@ -23,19 +22,20 @@ conn.commit()
 def login():
     time.sleep(DELAYSIM)
     data = request.get_json()
-    username = data.get('username')
+    email = data.get('email')  # Updated to email
     password = data.get('password')
 
-    if not username or not password:
-        return jsonify({"success": False, "message": "Missing username or password"})
+    if not email or not password:
+        return jsonify({"success": False, "message": "Missing email or password"})
 
-    c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+    # Update SQL query to use email instead of username
+    c.execute("SELECT * FROM users WHERE email = ? AND password = ?", (email, password))
     user = c.fetchone()
 
     if user:
-        uid, username, password, displayname = user
+        snid, uid, email, password, displayname = user  # Unpack correctly based on the number of columns
         session['user_id'] = uid  # Store user ID in session
-        session['username'] = username
+        session['email'] = email  # Store email in session
         session['displayname'] = displayname
         return jsonify({
             "success": True,
@@ -45,7 +45,7 @@ def login():
             }
         })
     else:
-        return jsonify({"success": False, "message": "Invalid username or password"})
+        return jsonify({"success": False, "message": "Invalid email or password"})
 
 @app.route('/check_session', methods=['GET'])
 def check_session():
