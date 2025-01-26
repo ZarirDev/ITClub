@@ -3,7 +3,7 @@
 Official IT Club Website
 
 
-![deprecated](https://emrahmete.wordpress.com/wp-content/uploads/2017/04/deprecated.png?w=848)
+![under construction](https://w7.pngwing.com/pngs/1014/79/png-transparent-yellow-and-black-under-construction-signage-under-construction-icon-computer-icons-architectural-engineering-free-construction-files-miscellaneous-text-logo-thumbnail.png)
 
 
-Further updates will be handled by the rest of the team.
+This project is still under development.
