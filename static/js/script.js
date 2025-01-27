@@ -1,4 +1,4 @@
-const PORT = "6310";
+const PORT = "8000";
 const IP = "localhost";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -98,18 +98,22 @@ async function loadUserPage(user) {
     showLoading();
 
     try {
-        const response = await fetch("user_page.html");
+        const response = await fetch("./user_page.html");
 
         if (!response.ok) {
             throw new Error("Failed to load user page");
         }
 
         const pageContent = await response.text();
-        document.body.innerHTML = pageContent;
+        const appContainer = document.getElementById("app");
 
-        // Populate user data into placeholders
-        document.getElementById("user-name").textContent = user.name;
-        document.getElementById("user-id").textContent = user.id;
+        if (appContainer) {
+            appContainer.innerHTML = pageContent;
+
+            // Populate user data into placeholders
+            document.getElementById("user-name").textContent = user.name;
+            document.getElementById("user-id").textContent = user.id;
+        }
     } catch (error) {
         console.error("Error loading user page:", error);
     } finally {
@@ -133,8 +137,21 @@ async function checkSession() {
 
         const result = await response.json();
 
+        const appContainer = document.getElementById("app");
+
         if (result.success) {
+            // User is logged in, load user page
             await loadUserPage(result.user);
+        } else {
+            // User not logged in, show login form
+            appContainer.innerHTML = `
+                <form>
+                    <input id="email" type="text" placeholder="Email" />
+                    <input id="password" type="password" placeholder="Password" />
+                    <button type="button" onclick="login()">Login</button>
+                </form>
+                <p id="message"></p>
+            `;
         }
     } catch (error) {
         console.error("Error checking session:", error);

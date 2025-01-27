@@ -1,12 +1,13 @@
 import time
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, render_template
 from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Required for session management
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-DELAYSIM = 0.5
+DELAYSIM = 0
+PORTTOHOST=8000
 
 # Initialize SQLite database
 conn = sqlite3.connect('users.db', check_same_thread=False)
@@ -17,6 +18,10 @@ conn.commit()
 # Sample user for testing (this is a comment now as you're shifting to email)
 # c.execute("INSERT OR IGNORE INTO users (uid, email, password, displayname) VALUES (?, ?, ?, ?)", (10, 'zarir498@gmail.com', 'zarir100', 'Ahmad Zarir'))
 # conn.commit()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -68,4 +73,4 @@ def logout():
     return jsonify({"success": True, "message": "Logged out successfully"})
 
 if __name__ == '__main__':
-    app.run(port=6310, debug=True)
+    app.run(port=PORTTOHOST, debug=True)
